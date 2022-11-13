@@ -1,6 +1,8 @@
 import java.lang.Math;
 import java.util.Arrays;
 
+import javax.lang.model.util.ElementScanner6;
+
 public class Hamming {
     static int[] mensaje(int len)
     {
@@ -14,7 +16,7 @@ public class Hamming {
         return (array);
     }
 
-    static int calcParidades(int lenMsg)
+    static int numParidades(int lenMsg)
     {
         double p = 1;
 
@@ -23,10 +25,42 @@ public class Hamming {
         return ((int)p);
     }
 
+    static int[] calcParidades(int[] input, int lenMsg)
+    {
+        int i = 1;
+        int x = 0;
+        int p = 0;
+        int count = 0;
+        
+        while(i < input.length)
+        {
+            if (input[i] == 2)
+            {
+                x = i;
+                while (x < input.length)
+                {
+                    while (p < i)
+                    {
+                        if (input[x + i] == 1)
+                            count++;
+                        p++;
+                    }
+                    x += i + p;
+                    p = 0;
+                }
+                if (count % 2 != 0)
+                    input[i] = 1;
+                else
+                    input[i] = 0;
+            }
+            i++;
+        }
+        return (input);
+    }
     static int[] Sender(int lenMsg)
     {
         int[] mensaje = mensaje(lenMsg);
-        int numPar = calcParidades(lenMsg);
+        int numPar = numParidades(lenMsg);
         int[] out = new int[lenMsg + numPar + 1];
         int i = 1;
         int m = 0;
@@ -41,12 +75,14 @@ public class Hamming {
             }
             else
                 out[i] = mensaje[m++];
-            i++;       
+            i++;
         }
+        System.out.println(Arrays.toString(out));
+        out = calcParidades(out, lenMsg);
         return (out);
     }
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(Sender(12)));
+        System.out.println(Arrays.toString(Sender(7)));
     }
 }
 
