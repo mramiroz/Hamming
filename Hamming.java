@@ -80,18 +80,32 @@ public class Hamming {
             i++;
         }
         i = 0;
-        System.out.println(Arrays.toString(out));
         out = calcParidades(out, lenMsg);
         while (i < out.length)
             if(out[i++] == 1)
                 count++;
         if(count % 2 != 0)
             out[0] = 1;
-
         return (out);
     }
+
+    static int[] Noise(int[] sender)
+    {
+        int numeroMod = (int)(Math.random()*3);
+        int posicionAleatoria;
+
+        for(int i = 0; i < numeroMod; i++)
+        {
+            posicionAleatoria = (int)(Math.random()*sender.length);
+            if (sender[posicionAleatoria] == 1)
+                sender[posicionAleatoria] = 0;
+            else
+                sender[posicionAleatoria] = 1;
+        }
+        return (sender);
+    }
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(Sender(11)));
+        System.out.println(Arrays.toString(Noise(Sender(11))));
     }
 }
 
