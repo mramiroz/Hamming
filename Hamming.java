@@ -13,8 +13,17 @@ public class Hamming {
         }
         return (array);
     }
+
+    static int calcParidades(int lenMsg)
+    {
+        double p = 1;
+
+        while (Math.pow(2, p) < p + lenMsg + 1)
+            p++;
+        return ((int)p);
+    }
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(mensaje(10)));
+        System.out.println(calcParidades(11));
     }
 }
 
