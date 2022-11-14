@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import javax.lang.model.util.ElementScanner6;
@@ -25,16 +26,17 @@ public class Hamming {
         return ((int)p);
     }
 
-    static int[] calcParidades(int[] input, int lenMsg)
+    static int[] calcParidades(int[] input)
     {
         int i = 1;
         int x = 0;
         int p = 0;
+        int pot = 0;
         int count = 0;
         
         while(i < input.length)
         {
-            if (input[i] == 2)
+            if ((int)Math.pow(2, pot) == i)
             {
                 x = i;
                 while (x < input.length)
@@ -53,6 +55,7 @@ public class Hamming {
                 else
                     input[i] = 0;
                 count = 0;
+                pot++;
             }
             i++;
         }
@@ -80,12 +83,13 @@ public class Hamming {
             i++;
         }
         i = 0;
-        out = calcParidades(out, lenMsg);
+        out = calcParidades(out);
         while (i < out.length)
             if(out[i++] == 1)
                 count++;
         if(count % 2 != 0)
             out[0] = 1;
+        System.out.println(Arrays.toString(out));
         return (out);
     }
 
@@ -102,10 +106,30 @@ public class Hamming {
             else
                 sender[posicionAleatoria] = 1;
         }
+        System.out.println(numeroMod);
+        //System.out.println(Arrays.toString(sender));
         return (sender);
     }
+
+    static int Reciver(int[] Noise)
+    {
+        int changes = 0;
+        int count = 0;
+        int[] temp = Noise;
+
+        System.out.println(Arrays.toString(Noise));
+        calcParidades(temp);
+        System.out.println(Arrays.toString(temp));
+        for(int x = 1; x < Noise.length; x++)
+            if (Noise[x] != temp[x])
+                changes++;
+        for (int i = 1; i < Noise.length; i++)
+            if (Noise[i] == 1)
+                count++;
+        return (changes);
+    }
     public static void main(String[] args) {
-        System.out.println(Arrays.toString(Noise(Sender(11))));
+        System.out.println(Reciver(Noise(Sender(11))));
     }
 }
 
