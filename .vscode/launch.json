@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch prueba",
+            "request": "launch",
+            "mainClass": "prueba",
+            "projectName": "Hamming_19d45430"
+        },
+        {
+            "type": "java",
+            "name": "Launch Hamming",
+            "request": "launch",
+            "mainClass": "Hamming",
+            "projectName": "Hamming_19d45430"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"

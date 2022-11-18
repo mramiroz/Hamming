@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import javax.lang.model.util.ElementScanner6;
+import javax.xml.transform.Source;
 
 public class Hamming {
     static int[] mensaje(int len)
@@ -14,6 +15,7 @@ public class Hamming {
             numeroRandom = (int)(Math.random()*2);
             array[i] = numeroRandom;
         }
+        System.out.println("Mensaje: " + Arrays.toString(array));
         return (array);
     }
 
@@ -61,6 +63,20 @@ public class Hamming {
         }
         return (input);
     }
+
+    static int[] validateGlobal(int[] arr)
+    {
+        int i = 1;
+        int count = 0;
+        while (i < arr.length)
+        if(arr[i++] == 1)
+            count++;
+        if(count % 2 != 0)
+            arr[0] = 1;
+        else if(count % 2 == 0)
+            arr[0] = 0;
+        return (arr);
+    }
     static int[] Sender(int lenMsg)
     {
         int[] mensaje = mensaje(lenMsg);
@@ -69,7 +85,6 @@ public class Hamming {
         int i = 1;
         int m = 0;
         int p = 0;
-        int count = 0;
 
         while(i < out.length)
         {
@@ -82,14 +97,9 @@ public class Hamming {
                 out[i] = mensaje[m++];
             i++;
         }
-        i = 0;
         out = calcParidades(out);
-        while (i < out.length)
-            if(out[i++] == 1)
-                count++;
-        if(count % 2 != 0)
-            out[0] = 1;
-        System.out.println(Arrays.toString(out));
+        out = validateGlobal(out);
+        System.out.println("Sender: " + Arrays.toString(out));
         return (out);
     }
 
@@ -106,30 +116,58 @@ public class Hamming {
             else
                 sender[posicionAleatoria] = 1;
         }
-        System.out.println(numeroMod);
-        //System.out.println(Arrays.toString(sender));
+        System.out.println("Numero de modificaciones: " + numeroMod);
         return (sender);
     }
 
-    static int Reciver(int[] Noise)
+    static int verError(int[] noise)
     {
-        int changes = 0;
-        int count = 0;
-        int[] temp = Noise;
+        int error = 0;
+        double p = 0;
+        for (int i = 1; i < noise.length; i++)
+        {
+            if (Math.pow(2, p) == i)
+            {
+                if (noise[i] == 1)
+                    error = error + i;
+                p++;
+            }
+        }
+        return(error);
+    }
 
-        System.out.println(Arrays.toString(Noise));
-        calcParidades(temp);
-        System.out.println(Arrays.toString(temp));
-        for(int x = 1; x < Noise.length; x++)
-            if (Noise[x] != temp[x])
-                changes++;
-        for (int i = 1; i < Noise.length; i++)
-            if (Noise[i] == 1)
-                count++;
-        return (changes);
+    static void Reciver(int[] noise)
+    {
+        int error = 0;
+        int[] temp = new int[noise.length];
+        int antesGlobal;
+
+        System.out.println("Noise:  " + Arrays.toString(noise));
+        antesGlobal = noise[0];
+        for(int x = 0; x < noise.length; x++)
+            temp[x] = noise[x];
+        temp = calcParidades(temp);
+        temp = validateGlobal(temp);
+        error = verError(temp);
+        if (error == 0)
+        {
+            noise = validateGlobal(noise);
+            if(antesGlobal != noise[0])
+                System.out.println("Error: " + error);
+            else
+                System.out.println("No hay ningun error");
+        }
+        else if(error > 0)
+        {
+            noise = validateGlobal(noise);
+            if (noise[0] == antesGlobal)
+                System.out.println("Hay dos errores");
+            else if(noise[0] != antesGlobal)
+                System.out.println("Error: " + error);
+        }
     }
     public static void main(String[] args) {
-        System.out.println(Reciver(Noise(Sender(11))));
+        Reciver(Noise(Sender(4)));
     }
 }
 
