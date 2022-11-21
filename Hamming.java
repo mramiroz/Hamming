@@ -19,15 +19,6 @@ public class Hamming {
         return (array);
     }
 
-    static int numParidades(int lenMsg)
-    {
-        double p = 1;
-
-        while (Math.pow(2, p) < p + lenMsg + 1)
-            p++;
-        return ((int)p);
-    }
-
     static int[] calcParidades(int[] input)
     {
         int i = 1;
@@ -80,12 +71,14 @@ public class Hamming {
     static int[] Sender(int lenMsg)
     {
         int[] mensaje = mensaje(lenMsg);
-        int numPar = numParidades(lenMsg);
-        int[] out = new int[lenMsg + numPar + 1];
+        int numPar = 0;
         int i = 1;
         int m = 0;
         int p = 0;
 
+        for(double pr = 1; Math.pow(2, pr) < pr + lenMsg + 1; pr++)
+            numPar = (int)pr;
+        int[] out = new int[lenMsg + numPar + 1];
         while(i < out.length)
         {
             if (Math.pow(2, p) == i)
@@ -120,27 +113,12 @@ public class Hamming {
         return (sender);
     }
 
-    static int verError(int[] noise)
-    {
-        int error = 0;
-        double p = 0;
-        for (int i = 1; i < noise.length; i++)
-        {
-            if (Math.pow(2, p) == i)
-            {
-                if (noise[i] == 1)
-                    error = error + i;
-                p++;
-            }
-        }
-        return(error);
-    }
-
     static void Reciver(int[] noise)
     {
         int error = 0;
         int[] temp = new int[noise.length];
         int antesGlobal;
+        double p = 0;
 
         System.out.println("Noise:  " + Arrays.toString(noise));
         antesGlobal = noise[0];
@@ -148,7 +126,15 @@ public class Hamming {
             temp[x] = noise[x];
         temp = calcParidades(temp);
         temp = validateGlobal(temp);
-        error = verError(temp);
+        for (int i = 1; i < noise.length; i++)
+        {
+            if (Math.pow(2, p) == i)
+            {
+                if (temp[i] == 1)
+                    error = error + i;
+                p++;
+            }
+        }
         if (error == 0)
         {
             noise = validateGlobal(noise);
@@ -167,7 +153,7 @@ public class Hamming {
         }
     }
     public static void main(String[] args) {
-        Reciver(Noise(Sender(4)));
+        Reciver(Noise(Sender(10)));
     }
 }
 
