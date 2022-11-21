@@ -1,9 +1,5 @@
 import java.lang.Math;
-import java.lang.reflect.Array;
 import java.util.Arrays;
-
-import javax.lang.model.util.ElementScanner6;
-import javax.xml.transform.Source;
 
 public class Hamming {
     static int[] mensaje(int len)
@@ -153,7 +149,7 @@ public class Hamming {
         }
     }
     public static void main(String[] args) {
-        Reciver(Noise(Sender(10)));
+        Reciver(Noise(Sender(12)));
     }
 }
 
